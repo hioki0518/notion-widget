@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>漫画の名言 - Elegant Notion Widget</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Serif JP', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: transparent;
+        }
+        
+        .widget-container {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border-radius: 15px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            color: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        h2 {
+            margin-bottom: 20px;
+            color: #ffd700;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        #quote {
+            font-size: 20px;
+            font-weight: 400;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            line-height: 1.6;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        
+        #quote-text {
+            margin-bottom: 15px;
+        }
+        
+        #character {
+            font-size: 16px;
+            color: #bbb;
+            font-style: italic;
+        }
+        
+        #refreshBtn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            background: transparent;
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-family: 'Noto Serif JP', serif;
+        }
+        
+        #refreshBtn:hover {
+            background: #ffd700;
+            color: #1a1a1a;
+        }
+        
+        /* Light mode support (though focus is on dark mode) */
+        @media (prefers-color-scheme: light) {
+            .widget-container {
+                background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+                color: #333;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            
+            h2 {
+                color: #1a1a1a;
+            }
+            
+            #character {
+                color: #666;
+            }
+            
+            #refreshBtn {
+                color: #1a1a1a;
+                border-color: #1a1a1a;
+            }
+            
+            #refreshBtn:hover {
+                background: #1a1a1a;
+                color: #f0f0f0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <h2>漫画の名言</h2>
+        <div id="quote">
+            <div id="quote-text"></div>
+            <div id="character"></div>
+        </div>
+        <button id="refreshBtn">次の名言</button>
+    </div>
+
+    <script>
+        const quotes = [
+            {
+                text: "人は死ぬぞ。いつかは必ず。どう生きるかだ。",
+                character: "ホイルホース（ジョジョの奇妙な冒険）"
+            },
+            {
+                text: "諦めたらそこで試合終了だよ。",
+                character: "安西先生（スラムダンク）"
+            },
+            {
+                text: "海賊王に俺はなる！",
+                character: "モンキー・D・ルフィ（ONE PIECE）"
+            },
+            {
+                text: "人は、心が原動力だ。",
+                character: "ロロノア・ゾロ（ONE PIECE）"
+            },
+            {
+                text: "好きなことで、生きていく。",
+                character: "両津勘吉（こちら葛飾区亀有公園前派出所）"
+            },
+            {
+                text: "オレは自分の忍道を貫く…それが忍だ！",
+                character: "うずまきナルト（NARUTO）"
+            },
+            {
+                text: "己を信じて生きろ。",
+                character: "カミナ（天元突破グレンラガン）"
+            },
+            {
+                text: "何が正しいかなんて分からない。だからこそ、自分が正しいと思うことをやるしかない。",
+                character: "エレン・イェーガー（進撃の巨人）"
+            },
+            {
+                text: "人間は、いつでも強くなれる。",
+                character: "悟空（ドラゴンボール）"
+            },
+            {
+                text: "どんな時も笑顔を忘れるな。",
+                character: "ポートガス・D・エース（ONE PIECE）"
+            },
+            {
+                text: "弱い自分を認めることから強さは始まる。",
+                character: "ベジータ（ドラゴンボール）"
+            },
+            {
+                text: "夢は逃げない。逃げるのはいつも自分だ。",
+                character: "武藤遊戯（遊☆戯☆王）"
+            }
+        ];
+
+        function getRandomQuote() {
+            const quoteElement = document.getElementById("quote");
+            quoteElement.style.opacity = 0;
+            
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * quotes.length);
+                const selectedQuote = quotes[randomIndex];
+                document.getElementById("quote-text").innerText = `「${selectedQuote.text}」`;
+                document.getElementById("character").innerText = selectedQuote.character;
+                quoteElement.style.opacity = 1;
+            }, 500);
+        }
+
+        // Initialize on load
+        document.addEventListener("DOMContentLoaded", () => {
+            getRandomQuote();
+            document.getElementById("refreshBtn").addEventListener("click", getRandomQuote);
+        });
+
+        // Also initialize immediately in case DOMContentLoaded already fired
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+            getRandomQuote();
+            document.getElementById("refreshBtn").addEventListener("click", getRandomQuote);
+        }
+    </script>
+</body>
+</html>
