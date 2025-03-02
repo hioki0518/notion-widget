@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>漫画の名言 - Notion Widget</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Serif JP', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: transparent;
+        }
+        
+        .widget-container {
+            text-align: center;
+            padding: 30px;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 15px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            color: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        #quote {
+            font-size: 20px;
+            font-weight: 400;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 30px 0;
+            line-height: 1.6;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        
+        #quote-text {
+            margin-bottom: 15px;
+        }
+        
+        #character {
+            font-size: 16px;
+            color: #bbb;
+            font-style: italic;
+        }
+        
+        #refreshBtn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-family: 'Noto Serif JP', serif;
+        }
+        
+        #refreshBtn:hover {
+            background: #ffffff;
+            color: #282828;
+        }
+    </style>
+</head>
+<body>
+    <div class="widget-container">
+        <div id="quote">
+            <div id="quote-text"></div>
+            <div id="character"></div>
+        </div>
+        <button id="refreshBtn">次の名言</button>
+    </div>
+
+    <script>
+        const quotes = [
+            {
+                text: "勝負の世界に絶対なんてない！",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "人間は誰でも、生きているだけで丸儲け。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "勝負の後で後悔しても遅い。決断の時にすべてを賭けろ！",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "人生は一度きり。後悔しないように生きろ。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "運も実力のうち。でも、運を引き寄せる努力をしなきゃダメだ。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "勝負は時の運。でも、その時をつかむのは己の力だ。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "命の次に大切なものは金じゃない。時間だ。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "勝負は始まる前から終わっている。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "人間、捨てたもんじゃない。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "勝負の世界では、弱い者が淘汰されるのは当然だ。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "人生は博打だ。でも、その博打に勝つのは己の力だ。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "勝負の世界で生き残るには、常に冷静でいなければならない。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "人間、追い詰められた時こそ本当の力が出る。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "勝負の世界では、相手の心を読むことが何より大切だ。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "人生は一度きり。だからこそ、全力で生きなきゃいけない。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "勝負の世界では、運も実力のうちだ。でも、その運を引き寄せるのは己の努力だ。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "人間、窮地に追い込まれた時こそ、真の力を発揮できる。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "勝負の世界では、一瞬の判断が人生を左右する。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "人生は賭けだ。でも、その賭けに勝つのは己の力だ。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "勝負の世界では、相手の弱点を見抜くことが勝利への近道だ。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "人間、最後まで諦めなければ必ず道は開ける。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "勝負の世界では、冷静さを失えば、すべてを失う。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "人生は一度きり。だからこそ、悔いのない選択をしなければならない。",
+                character: "伊藤開司（カイジ）"
+            },
+            {
+                text: "海賊王に俺はなる！",
+                character: "モンキー・D・ルフィ（ONE PIECE）"
+            },
+            {
+                text: "諦めたらそこで試合終了だよ。",
+                character: "安西先生（スラムダンク）"
+            },
+            {
+                text: "人は、心が原動力だ。",
+                character: "ロロノア・ゾロ（ONE PIECE）"
+            },
+            {
+                text: "己を信じて生きろ。",
+                character: "カミナ（天元突破グレンラガン）"
+            },
+            {
+                text: "人間は、いつでも強くなれる。",
+                character: "孫悟空（ドラゴンボール）"
+            },
+            {
+                text: "弱い自分を認めることから強さは始まる。",
+                character: "ベジータ（ドラゴンボール）"
+            }
+        ];
+
+        function getRandomQuote() {
+            const quoteElement = document.getElementById("quote");
+            quoteElement.style.opacity = 0;
+            
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * quotes.length);
+                const selectedQuote = quotes[randomIndex];
+                document.getElementById("quote-text").innerText = `「${selectedQuote.text}」`;
+                document.getElementById("character").innerText = selectedQuote.character;
+                quoteElement.style.opacity = 1;
+            }, 500);
+        }
+
+        // Initialize on load
+        document.addEventListener("DOMContentLoaded", () => {
+            getRandomQuote();
+            document.getElementById("refreshBtn").addEventListener("click", getRandomQuote);
+        });
+
+        // Also initialize immediately in case DOMContentLoaded already fired
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+            getRandomQuote();
+            document.getElementById("refreshBtn").addEventListener("click", getRandomQuote);
+        }
+    </script>
+</body>
+</html>
